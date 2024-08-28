@@ -2,28 +2,33 @@ name: Checks
 
 on:
   workflow_call:
+   inputs:
+      environment:
+        description: "the environment to run the checks in"
+        required: true
+        type: string
 
 jobs:
   spellcheck:
     runs-on: ubuntu-latest
-    environment: qa
+    environment: ${{ inputs.environment }}
     steps:
-    - name: 'Checkout GitHub Action'
+    - name: Checkout Repository
       uses: actions/checkout@v3
 
     - name: Setup Python Environment
       uses: actions/setup-python@v4
       with:
         python-version: '3.12'
-    - name: Install python dependencies
+    - name: Install Python Dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
+        pip install invoke>=1.4.1
 
-    - name: Install aspell (spell checker)
+    - name: Install Aspell
       run: |
         sudo apt-get install aspell aspell-en
 
-    - name: Run spell checker
+    - name: Run Spell Check
       run: |
         inv spellcheck
