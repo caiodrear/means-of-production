@@ -11,7 +11,7 @@ jobs:
 
     steps:
     - name: Get Tag
-      run: echo "${GITHUB_HEAD_REF}=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+      run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/tags/}}" >> $GITHUB_OUTPUT
       id: extract_branch
 
     - name: Create GitHub Release
