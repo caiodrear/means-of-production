@@ -1,9 +1,7 @@
 name: Checks
 
 on:
-  push:
-    branches:
-      - '*'
+  workflow_call:
 
 env:
   AZURE_WEBAPP_PACKAGE_PATH: '.'
