@@ -1,0 +1,58 @@
+name: Azure Deploy
+
+on:
+  push:
+    tags:
+      - '*.*.*'
+
+env:
+  AZURE_WEBAPP_NAME: cricketaugur 
+  AZURE_WEBAPP_PACKAGE_PATH: '.'
+
+jobs:
+  release_and_deploy:
+    name: Create Release and Deploy
+    runs-on: ubuntu-latest
+    environment: prod
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.11
+
+    - name: Install Dependencies
+      run: |
+        pushd ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+        python -m pip install --upgrade pip
+        python -m pip install poetry && \
+        poetry install
+        popd
+
+    - name: Zip the Application
+      run: |
+        zip -r chesapeake.zip ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+
+    - name: Get Tag
+      run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/tags/}}" >> $GITHUB_OUTPUT
+      id: extract_branch
+
+    - name: Create GitHub Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: ${{ github.ref }}
+        draft: false
+        prerelease: ${{ contains(steps.extract_branch.outputs.branch, 'a') }}
+
+    - name: Deploy to Azure
+      uses: azure/webapps-deploy@v3
+      with:
+        app-name: ${{ env.AZURE_WEBAPP_NAME }}
+        publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_4C179F9ECEB64BDAAFD2B4D59E7E0889 }}
+        package: chesapeake.zip

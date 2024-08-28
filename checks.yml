@@ -1,0 +1,91 @@
+name: Checks
+
+on:
+  push:
+    branches:
+      - '*'
+
+env:
+  AZURE_WEBAPP_PACKAGE_PATH: '.'
+
+jobs:
+  dependencies:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.11
+
+    - name: Install Dependencies
+      run: |
+        pushd ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+        python -m pip install --upgrade pip
+        python -m pip install poetry && \
+        poetry install
+        popd
+
+    - name: Zip the Application
+      run: |
+        zip -r chesapeake.zip ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.11
+
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install poetry && \
+        poetry install
+
+    - name: Run Tests
+      run: poetry run pytest
+
+  formatting:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.11
+
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install poetry && \
+        poetry install
+
+    - name: Formatting
+      run: poetry run black --check .
+
+  import-checks:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.11
+
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install poetry && \
+        poetry install
+
+    - name: Isort
+      run: poetry run isort --check .
+

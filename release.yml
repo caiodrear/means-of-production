@@ -1,0 +1,26 @@
+name: Release from Tag
+
+on:
+  workflow_call:
+
+jobs:
+  release:
+    name: Create Release from Tag
+    runs-on: ubuntu-latest
+    environment: prod
+
+    steps:
+    - name: Get Tag
+      run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/tags/}}" >> $GITHUB_OUTPUT
+      id: extract_branch
+
+    - name: Create GitHub Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: ${{ github.ref }}
+        draft: false
+        prerelease: ${{ contains(steps.extract_branch.outputs.branch, 'a') }}
