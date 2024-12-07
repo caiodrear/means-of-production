@@ -12,10 +12,6 @@ on:
         required: false
         type: string
         default: "."
-      azure-functionapp-publish-profile:
-        description: "Secret name for the Azure Function App publish profile"
-        required: true
-        type: string
       python-version:
         required: true
         type: string
@@ -24,6 +20,11 @@ on:
         required: false
         type: string
         default: "dev"
+    secrets:
+      azure-functionapp-publish-profile:
+        description: "Secret name for the Azure Function App publish profile"
+        required: true
+        type: string
 
 jobs:
   release-and-deploy:
