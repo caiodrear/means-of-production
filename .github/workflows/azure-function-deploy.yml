@@ -37,10 +37,6 @@ jobs:
       with:
         python-version: ${{ inputs.python-version }}
 
-    - name: Check Python Version
-      run: |
-        python --version
-
     - name: Install Dependencies
       run: |
         pushd '${{ inputs.azure-functionapp-package-path }}/'
