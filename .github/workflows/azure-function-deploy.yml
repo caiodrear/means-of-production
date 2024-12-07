@@ -15,11 +15,16 @@ on:
       python-version:
         required: true
         type: string
+      environment:
+        description: "the environment to run the checks in"
+        required: false
+        type: string
+        default: "dev"
 
 jobs:
   release-and-deploy:
     runs-on: ubuntu-latest
-    environment: prod
+    environment: ${{ inputs.environment }}
     steps:
     - uses: actions/checkout@v4
 
