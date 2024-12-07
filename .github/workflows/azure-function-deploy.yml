@@ -24,7 +24,6 @@ on:
       azure-functionapp-publish-profile:
         description: "Secret name for the Azure Function App publish profile"
         required: true
-        type: string
 
 jobs:
   release-and-deploy:
