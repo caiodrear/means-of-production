@@ -51,6 +51,6 @@ jobs:
       with:
         app-name: ${{ inputs.azure-functionapp-name }}
         package: ${{ inputs.azure-functionapp-package-path }}
-        publish-profile: ${{ secrets[inputs.azure-functionapp-publish-profile] }}
+        publish-profile: ${{ secrets.azure-functionapp-publish-profile }}
         scm-do-build-during-deployment: true
         enable-oryx-build: true
