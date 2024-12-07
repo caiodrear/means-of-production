@@ -12,6 +12,10 @@ on:
         required: false
         type: string
         default: "."
+      azure-functionapp-publish-profile:
+        description: "Secret name for the Azure Function App publish profile"
+        required: true
+        type: string
       python-version:
         required: true
         type: string
@@ -47,6 +51,6 @@ jobs:
       with:
         app-name: ${{ inputs.azure-functionapp-name }}
         package: ${{ inputs.azure-functionapp-package-path }}
-        publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
+        publish-profile: ${{ secrets[inputs.azure-functionapp-publish-profile] }}
         scm-do-build-during-deployment: true
         enable-oryx-build: true
