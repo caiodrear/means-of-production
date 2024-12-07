@@ -2,19 +2,19 @@ name: Deploy Python project to Azure Function App
 
 on:
   workflow_call:
-  inputs:
-    azure-functionapp-name:
-      description: "Name of the Azure Function"
-      required: true
-      type: string
-    azure-functionapp-package-path:
-      description: "Path to function app project; defaults to the repository root"
-      required: false
-      type: string
-      default: "."
-    python-version:
-      required: true
-      type: string
+    inputs:
+      azure-functionapp-name:
+        description: "Name of the Azure Function"
+        required: true
+        type: string
+      azure-functionapp-package-path:
+        description: "Path to function app project; defaults to the repository root"
+        required: false
+        type: string
+        default: "."
+      python-version:
+        required: true
+        type: string
 
 jobs:
   release-and-deploy:
