@@ -39,11 +39,15 @@ jobs:
 
     - name: Install Dependencies
       run: |
-        pushd '${{ inputs.azure-functionapp-package-path }}/'
+        pushd '${{ inputs.azure-functionapp-package-path }}'
         python -m pip install --upgrade pip
         python -m pip install poetry && \
         poetry install
         popd
+
+    - name: Zip the Application
+      run: |
+        zip -r package.zip '${{ inputs.azure-functionapp-package-path }}'
 
     - name: 'Run Azure Functions Action'
       uses: Azure/functions-action@v1
@@ -51,5 +55,4 @@ jobs:
       with:
         app-name: ${{ inputs.azure-functionapp-name }}
         publish-profile: ${{ secrets.azure-functionapp-publish-profile }}
-        scm-do-build-during-deployment: true
-        enable-oryx-build: true
+        package: package.zip
