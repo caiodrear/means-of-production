@@ -33,13 +33,14 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: Setup Python ${{ inputs.python-version }} Environment
-      uses: actions/setup-python@v1
+      uses: actions/setup-python@v4
       with:
         python-version: ${{ inputs.python-version }}
 
     - name: Install Dependencies
       run: |
-        pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
+        pushd '${{ inputs.azure-functionapp-package-path }}/'
+        python -m pip install --upgrade pip
         python -m pip install poetry && \
         poetry install
         popd
